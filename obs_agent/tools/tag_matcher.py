@@ -1,4 +1,4 @@
-"""Tag matcher using AI and YAML configuration."""
+"""Tag matcher using LiteLLM and YAML configuration."""
 
 import json
 import os
@@ -6,8 +6,7 @@ from pathlib import Path
 from typing import Optional
 
 import yaml
-from google import genai
-from google.genai import types
+import litellm
 
 from obs_agent.models import TagsConfig, AnalyzeResult
 
@@ -62,20 +61,26 @@ def get_tags_prompt(config: TagsConfig) -> str:
 
 
 class TagMatcher:
-    """Match tags to content using AI."""
+    """Match tags to content using LiteLLM."""
 
-    def __init__(self, api_key: Optional[str] = None, config_path: Optional[str] = None):
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model: Optional[str] = None,
+        config_path: Optional[str] = None,
+    ):
         """Initialize the tag matcher.
 
         Args:
-            api_key: Google API key. If not provided, uses GOOGLE_API_KEY env var.
+            api_key: OpenRouter API key. If not provided, uses OPENROUTER_API_KEY env var.
+            model: Model name. If not provided, uses LLM_MODEL env var or default.
             config_path: Path to tags.yaml configuration file.
         """
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY is required")
-        self.client = genai.Client(api_key=self.api_key)
-        self.model = "gemini-2.0-flash"
+            raise ValueError("OPENROUTER_API_KEY is required")
+
+        self.model = model or os.getenv("LLM_MODEL", "openrouter/google/gemini-2.5-flash-preview")
         self.config = load_tags_config(config_path)
 
     def get_all_tag_ids(self) -> list[str]:
@@ -108,21 +113,37 @@ class TagMatcher:
 
         prompt = get_tags_prompt(self.config) + f"\n\n文章信息:\n{content_desc}"
 
-        response = await self.client.aio.models.generate_content(
+        messages = [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+
+        response = await litellm.acompletion(
             model=self.model,
-            contents=[prompt],
-            config=types.GenerateContentConfig(
-                temperature=0.1,
-                response_mime_type="application/json",
-            ),
+            messages=messages,
+            api_key=self.api_key,
+            temperature=0.1,
+            response_format={"type": "json_object"},
         )
 
-        result_text = response.text.strip()
+        result_text = response.choices[0].message.content.strip()
+
+        # Clean up markdown code blocks if present
         if result_text.startswith("```"):
             lines = result_text.split("\n")
             result_text = "\n".join(lines[1:-1])
 
-        tags = json.loads(result_text)
+        # Handle both array and object responses
+        parsed = json.loads(result_text)
+        if isinstance(parsed, list):
+            tags = parsed
+        elif isinstance(parsed, dict):
+            # Try to extract tags from common keys
+            tags = parsed.get("tags", parsed.get("result", []))
+        else:
+            tags = []
 
         valid_tags = self.get_all_tag_ids()
         matched_tags = [tag for tag in tags if tag in valid_tags]

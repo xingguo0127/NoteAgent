@@ -5,7 +5,7 @@
 ## 功能特点
 
 - 支持 bilibili、小红书、微信公众号截图识别
-- 使用 Gemini 2.0 Flash 多模态 API 提取信息
+- 使用 LiteLLM + OpenRouter 调用 Gemini 2.5 Flash 多模态 API 提取信息
 - AI 自动打标签
 - 保存为 Obsidian Bases 兼容格式
 - 自动 Git 同步（pull -> write -> commit -> push）
@@ -27,8 +27,9 @@ cp .env.example .env
 ```
 
 需要配置：
-- `GOOGLE_API_KEY`: Google AI API 密钥 (从 https://aistudio.google.com/app/apikey 获取)
-- `OBSIDIAN_GIT_REPO`: Obsidian 笔记的 GitHub 仓库地址
+- `OPENROUTER_API_KEY`: OpenRouter API 密钥 (从 https://openrouter.ai/keys 获取)
+- `LLM_MODEL`: 模型名称（可选，默认 `openrouter/google/gemini-2.5-flash-preview`）
+- `OBSIDIAN_GIT_REPO`: Obsidian 笔记的 GitHub 仓库地址（推荐使用 SSH 格式）
 - `OBSIDIAN_GIT_BRANCH`: Git 分支名称（默认 main）
 - `OBSIDIAN_VAULT_PATH`: 本地 Obsidian Vault 路径
 

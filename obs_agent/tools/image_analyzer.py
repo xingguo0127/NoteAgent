@@ -1,12 +1,11 @@
-"""Image analyzer using Gemini multimodal API."""
+"""Image analyzer using LiteLLM with OpenRouter."""
 
 import base64
 import json
 import os
 from typing import Optional
 
-from google import genai
-from google.genai import types
+import litellm
 
 from obs_agent.models import AnalyzeResult
 
@@ -42,15 +41,20 @@ ANALYZE_PROMPT = """分析这张截图，提取以下信息并以 JSON 格式返
 
 
 class ImageAnalyzer:
-    """Analyze screenshots using Gemini multimodal API."""
+    """Analyze screenshots using LiteLLM with OpenRouter."""
 
-    def __init__(self, api_key: Optional[str] = None):
-        """Initialize the analyzer with API key."""
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
+        """Initialize the analyzer with API key.
+
+        Args:
+            api_key: OpenRouter API key. If not provided, uses OPENROUTER_API_KEY env var.
+            model: Model name. If not provided, uses LLM_MODEL env var or default.
+        """
+        self.api_key = api_key or os.getenv("OPENROUTER_API_KEY")
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY is required")
-        self.client = genai.Client(api_key=self.api_key)
-        self.model = "gemini-2.0-flash"
+            raise ValueError("OPENROUTER_API_KEY is required")
+
+        self.model = model or os.getenv("LLM_MODEL", "openrouter/google/gemini-2.5-flash-preview")
 
     async def analyze(self, image_data: bytes, mime_type: str = "image/png") -> AnalyzeResult:
         """Analyze an image and extract article information.
@@ -62,19 +66,39 @@ class ImageAnalyzer:
         Returns:
             AnalyzeResult with extracted information
         """
-        image_part = types.Part.from_bytes(data=image_data, mime_type=mime_type)
+        # Convert image to base64
+        image_base64 = base64.b64encode(image_data).decode("utf-8")
 
-        response = await self.client.aio.models.generate_content(
+        # Build message with image
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:{mime_type};base64,{image_base64}"
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "text": ANALYZE_PROMPT
+                    }
+                ]
+            }
+        ]
+
+        response = await litellm.acompletion(
             model=self.model,
-            contents=[image_part, ANALYZE_PROMPT],
-            config=types.GenerateContentConfig(
-                temperature=0.1,
-                response_mime_type="application/json",
-            ),
+            messages=messages,
+            api_key=self.api_key,
+            temperature=0.1,
+            response_format={"type": "json_object"},
         )
 
-        result_text = response.text.strip()
+        result_text = response.choices[0].message.content.strip()
 
+        # Clean up markdown code blocks if present
         if result_text.startswith("```"):
             lines = result_text.split("\n")
             result_text = "\n".join(lines[1:-1])

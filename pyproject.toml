@@ -5,8 +5,7 @@ description = "Screenshot information extraction Agent for Obsidian Bases"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "google-adk>=0.3.0",
-    "google-genai>=1.0.0",
+    "litellm>=1.55.0",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
     "python-multipart>=0.0.18",
