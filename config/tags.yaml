@@ -1,0 +1,118 @@
+categories:
+  - id: topic
+    name: 主题分类
+    tags:
+      - id: tech
+        name: 科技
+        keywords:
+          - AI
+          - 人工智能
+          - 编程
+          - 开发
+          - 技术
+          - 软件
+          - 代码
+          - 算法
+      - id: life
+        name: 生活
+        keywords:
+          - 日常
+          - 美食
+          - 旅行
+          - 生活方式
+          - 家居
+          - 穿搭
+      - id: finance
+        name: 财经
+        keywords:
+          - 投资
+          - 理财
+          - 股票
+          - 基金
+          - 经济
+          - 金融
+      - id: education
+        name: 教育
+        keywords:
+          - 学习
+          - 考试
+          - 课程
+          - 教程
+          - 知识
+          - 技能
+      - id: entertainment
+        name: 娱乐
+        keywords:
+          - 游戏
+          - 电影
+          - 音乐
+          - 动漫
+          - 综艺
+          - 明星
+      - id: health
+        name: 健康
+        keywords:
+          - 健身
+          - 运动
+          - 医疗
+          - 养生
+          - 心理
+          - 减肥
+
+  - id: content_type
+    name: 内容类型
+    tags:
+      - id: tutorial
+        name: 教程
+        keywords:
+          - 教程
+          - 教学
+          - 入门
+          - 指南
+          - 攻略
+          - 步骤
+      - id: review
+        name: 测评
+        keywords:
+          - 测评
+          - 评测
+          - 体验
+          - 开箱
+          - 对比
+      - id: news
+        name: 资讯
+        keywords:
+          - 新闻
+          - 资讯
+          - 动态
+          - 发布
+          - 公告
+      - id: opinion
+        name: 观点
+        keywords:
+          - 观点
+          - 看法
+          - 分析
+          - 思考
+          - 评论
+      - id: sharing
+        name: 分享
+        keywords:
+          - 分享
+          - 推荐
+          - 安利
+          - 种草
+          - 好物
+
+  - id: source
+    name: 来源平台
+    tags:
+      - id: bilibili
+        name: B站
+        keywords: []
+      - id: xiaohongshu
+        name: 小红书
+        keywords: []
+      - id: wechat
+        name: 微信公众号
+        keywords: []
