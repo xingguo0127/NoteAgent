@@ -13,6 +13,7 @@ class AnalyzeResult(BaseModel):
     summary: str = Field(default="", description="Article summary")
     content: str = Field(default="", description="Main content")
     publish_date: str = Field(default="", description="Publish date if available")
+    url: str = Field(default="", description="Source URL")
 
 
 class TagConfig(BaseModel):
@@ -47,6 +48,7 @@ class Article(BaseModel):
     content: str = ""
     tags: list[str] = Field(default_factory=list)
     capture_date: date = Field(default_factory=date.today)
+    url: str = ""
 
     def to_frontmatter(self) -> dict:
         """Convert to frontmatter dictionary."""
@@ -57,6 +59,7 @@ class Article(BaseModel):
             "tags": self.tags,
             "capture_date": self.capture_date.isoformat(),
             "summary": self.summary,
+            "url": self.url,
         }
 
 
@@ -115,3 +118,4 @@ class ProcessResponse(BaseModel):
     tags: list[str] = Field(default_factory=list)
     file_path: str = ""
     git_status: str = ""
+    url: str = ""

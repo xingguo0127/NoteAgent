@@ -52,6 +52,9 @@ def generate_markdown(article: Article) -> str:
         "",
     ]
 
+    if article.url:
+        content_parts.extend([f"[原文链接]({article.url})", ""])
+
     if article.summary:
         content_parts.extend([f"> {article.summary}", ""])
 
@@ -149,6 +152,7 @@ async def save_to_obsidian(
     summary: str = "",
     content: str = "",
     tags: Optional[list[str]] = None,
+    url: str = "",
 ) -> dict:
     """Tool function for ADK agent to save articles to Obsidian.
 
@@ -159,6 +163,7 @@ async def save_to_obsidian(
         summary: Article summary
         content: Article content
         tags: List of tag IDs
+        url: Source URL
 
     Returns:
         Dictionary with success status and file path
@@ -172,6 +177,7 @@ async def save_to_obsidian(
         content=content,
         tags=tags or [],
         capture_date=date.today(),
+        url=url,
     )
 
     try:

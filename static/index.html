@@ -299,6 +299,10 @@
                     <div class="tags-container" id="tagsContainer"></div>
                 </div>
                 <div class="field">
+                    <label>原文链接</label>
+                    <div id="sourceUrl">-</div>
+                </div>
+                <div class="field">
                     <label>保存路径</label>
                     <input type="text" id="filePath" readonly>
                 </div>
@@ -444,6 +448,14 @@
                 ).join('');
             } else {
                 tagsContainer.innerHTML = '<span style="color: #999;">无标签</span>';
+            }
+
+            // Render source URL
+            const sourceUrl = document.getElementById('sourceUrl');
+            if (result.url) {
+                sourceUrl.innerHTML = `<a href="${result.url}" target="_blank" style="color: #7c3aed; text-decoration: none;">${result.url}</a>`;
+            } else {
+                sourceUrl.innerHTML = '<span style="color: #999;">-</span>';
             }
 
             // Render git status
