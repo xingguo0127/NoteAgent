@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import httpx
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 
 class BaseUrlFetcher(ABC):
