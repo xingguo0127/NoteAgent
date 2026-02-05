@@ -104,6 +104,7 @@ class ProcessRequest(BaseModel):
 
     app_name: str = Field(default="", description="App name (e.g., bilibili, 小红书). If provided, overrides detected app_name.")
     image_base64: str = Field(description="Base64 encoded image data")
+    url: str = Field(default="", description="Source URL of the content")
 
 
 class ProcessResponse(BaseModel):

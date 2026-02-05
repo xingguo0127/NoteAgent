@@ -37,26 +37,48 @@ def load_tags_config(config_path: Optional[str] = None) -> TagsConfig:
 def get_tags_prompt(config: TagsConfig) -> str:
     """Generate prompt for AI tag matching based on config."""
     categories_desc = []
-    all_tag_ids = []
+
+    # Separate topic categories and content type category
+    topic_categories = []
+    type_category = None
 
     for category in config.categories:
+        if category.id == "type":
+            type_category = category
+        else:
+            topic_categories.append(category)
+
+    # Build topic tags description
+    for category in topic_categories:
         tags_desc = []
         for tag in category.tags:
-            all_tag_ids.append(tag.id)
             keywords_str = f" (关键词: {', '.join(tag.keywords)})" if tag.keywords else ""
             tags_desc.append(f"  - {tag.id}: {tag.name}{keywords_str}")
-        categories_desc.append(f"{category.name}:\n" + "\n".join(tags_desc))
+        categories_desc.append(f"{category.name} ({category.id}/):\n" + "\n".join(tags_desc))
+
+    # Build content type description
+    type_desc = ""
+    if type_category:
+        type_tags = []
+        for tag in type_category.tags:
+            keywords_str = f" (关键词: {', '.join(tag.keywords)})" if tag.keywords else ""
+            type_tags.append(f"  - {tag.id}: {tag.name}{keywords_str}")
+        type_desc = f"\n内容类型 (type/)（必选1个）:\n" + "\n".join(type_tags)
 
     return f"""根据以下文章信息，从给定的标签中选择最合适的标签。
 
-可用标签分类：
+## 主题领域标签（可多选，每个分类最多选2个）：
 {chr(10).join(categories_desc)}
+{type_desc}
 
-请返回一个 JSON 数组，包含选中的标签 ID（不是标签名称）。
-每个分类最多选择 2 个最相关的标签。
-只返回 JSON 数组，不要包含任何其他文字。
+## 规则：
+1. 主题领域标签可以选择多个，但每个分类最多2个
+2. 内容类型标签必须且只能选择1个
+3. 返回格式为 JSON 数组，包含完整的标签 ID（如 "ai/coding", "type/tutorial"）
 
-示例返回格式: ["tech", "bilibili", "tutorial"]
+请只返回 JSON 数组，不要包含任何其他文字。
+
+示例返回格式: ["ai/coding", "dev/tools", "type/tutorial"]
 """
 
 
@@ -101,11 +123,10 @@ class TagMatcher:
             List of matched tag IDs
         """
         if not self.config.categories:
-            return [self._source_to_tag(analyze_result.app_name)]
+            return []
 
         content_desc = f"""
 标题: {analyze_result.title}
-来源: {analyze_result.app_name}
 作者: {analyze_result.author}
 摘要: {analyze_result.summary}
 内容: {analyze_result.content[:500] if analyze_result.content else ''}
@@ -148,20 +169,7 @@ class TagMatcher:
         valid_tags = self.get_all_tag_ids()
         matched_tags = [tag for tag in tags if tag in valid_tags]
 
-        source_tag = self._source_to_tag(analyze_result.app_name)
-        if source_tag and source_tag not in matched_tags:
-            matched_tags.append(source_tag)
-
         return matched_tags
-
-    def _source_to_tag(self, app_name: str) -> str:
-        """Convert app name to tag ID."""
-        mapping = {
-            "bilibili": "bilibili",
-            "小红书": "xiaohongshu",
-            "微信公众号": "wechat",
-        }
-        return mapping.get(app_name, "")
 
 
 async def match_tags(

@@ -11,7 +11,6 @@ from obs_agent.tools import (
     ImageAnalyzer,
     ObsidianWriter,
     TagMatcher,
-    fetch_source_url,
 )
 
 router = APIRouter(prefix="/api")
@@ -73,9 +72,6 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
         matcher = TagMatcher()
         tags = await matcher.match_tags(result)
 
-        # Step 3.5: Fetch source URL
-        source_url = await fetch_source_url(app_name, result.title, result.author)
-
         # Step 4: Write to Obsidian
         writer = ObsidianWriter()
         article = Article(
@@ -86,7 +82,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
             content=result.content,
             tags=tags,
             capture_date=date.today(),
-            url=source_url,
+            url=request.url,
         )
         file_path = writer.write_article(article)
 
@@ -106,7 +102,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                 tags=tags,
                 file_path=file_path,
                 git_status=f"Pull: OK | Add: {add_msg}",
-                url=source_url,
+                url=request.url,
             )
 
         # Commit
@@ -122,7 +118,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                 tags=tags,
                 file_path=file_path,
                 git_status=f"Pull: OK | Add: OK | Commit: {commit_msg}",
-                url=source_url,
+                url=request.url,
             )
 
         # Push (only if there were changes committed)
@@ -140,7 +136,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                     tags=tags,
                     file_path=file_path,
                     git_status=f"Pull: OK | Add: OK | Commit: OK | Push: {push_msg}",
-                    url=source_url,
+                    url=request.url,
                 )
             git_status = f"Pull: OK | Add: OK | Commit: OK | Push: OK"
 
@@ -154,7 +150,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
             tags=tags,
             file_path=file_path,
             git_status=git_status,
-            url=source_url,
+            url=request.url,
         )
 
     except HTTPException:

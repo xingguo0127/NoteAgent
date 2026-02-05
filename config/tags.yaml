@@ -1,68 +1,282 @@
 categories:
-  - id: topic
-    name: 主题分类
+  - id: ai
+    name: AI人工智能
     tags:
-      - id: tech
-        name: 科技
+      - id: ai/coding
+        name: AI编程
         keywords:
-          - AI
-          - 人工智能
-          - 编程
-          - 开发
-          - 技术
-          - 软件
-          - 代码
-          - 算法
-      - id: life
-        name: 生活
+          - AI编程
+          - Copilot
+          - 代码生成
+          - AI coding
+          - cursor
+          - windsurf
+      - id: ai/agent
+        name: AI Agent
         keywords:
-          - 日常
-          - 美食
-          - 旅行
-          - 生活方式
-          - 家居
-          - 穿搭
-      - id: finance
-        name: 财经
+          - Agent
+          - 智能体
+          - AI助手
+          - 自主代理
+          - MCP
+          - function calling
+      - id: ai/llm
+        name: 大语言模型
         keywords:
-          - 投资
-          - 理财
-          - 股票
-          - 基金
-          - 经济
-          - 金融
-      - id: education
-        name: 教育
+          - LLM
+          - 大模型
+          - GPT
+          - Claude
+          - 语言模型
+          - prompt
+          - 提示词
+      - id: ai/hardware
+        name: AI硬件
+        keywords:
+          - AI硬件
+          - NPU
+          - AI芯片
+          - AI加速
+          - 算力
+      - id: ai/infra
+        name: AI基础设施
+        keywords:
+          - 训练
+          - 推理
+          - 部署
+          - MLOps
+          - 向量数据库
+          - RAG
+      - id: ai/image
+        name: AI图像
+        keywords:
+          - AI绘画
+          - Stable Diffusion
+          - Midjourney
+          - 图像生成
+          - ComfyUI
+          - DALL-E
+
+  - id: hardware
+    name: 硬件
+    tags:
+      - id: hardware/wearable
+        name: 可穿戴设备
+        keywords:
+          - 智能手表
+          - 手环
+          - 耳机
+          - 眼镜
+          - AR眼镜
+          - VR头显
+      - id: hardware/display
+        name: 显示设备
+        keywords:
+          - 显示器
+          - 电视
+          - 投影
+          - 屏幕
+          - OLED
+          - mini LED
+      - id: hardware/embedded
+        name: 嵌入式
+        keywords:
+          - 嵌入式
+          - 单片机
+          - Arduino
+          - 树莓派
+          - ESP32
+          - IoT
+      - id: hardware/robot
+        name: 机器人
+        keywords:
+          - 机器人
+          - 机械臂
+          - 人形机器人
+          - 无人机
+          - 具身智能
+      - id: hardware/chip
+        name: 芯片
+        keywords:
+          - 芯片
+          - CPU
+          - GPU
+          - 半导体
+          - 处理器
+          - SoC
+
+  - id: dev
+    name: 开发
+    tags:
+      - id: dev/gamedev
+        name: 游戏开发
+        keywords:
+          - 游戏开发
+          - Unity
+          - Unreal
+          - 游戏引擎
+          - 独立游戏
+      - id: dev/frontend
+        name: 前端开发
+        keywords:
+          - 前端
+          - React
+          - Vue
+          - 网页
+          - CSS
+          - JavaScript
+          - TypeScript
+      - id: dev/backend
+        name: 后端开发
+        keywords:
+          - 后端
+          - API
+          - 数据库
+          - 服务器
+          - 微服务
+          - Python
+          - Go
+      - id: dev/mobile
+        name: 移动开发
+        keywords:
+          - iOS
+          - Android
+          - Flutter
+          - React Native
+          - 移动端
+          - App
+      - id: dev/tools
+        name: 开发工具
+        keywords:
+          - IDE
+          - 编辑器
+          - Git
+          - Docker
+          - 命令行
+          - 终端
+      - id: dev/opensource
+        name: 开源项目
+        keywords:
+          - 开源
+          - GitHub
+          - 开源项目
+          - 开源软件
+          - 开源社区
+
+  - id: creative
+    name: 创意制作
+    tags:
+      - id: creative/3d
+        name: 3D制作
+        keywords:
+          - 3D建模
+          - Blender
+          - C4D
+          - 三维
+          - 渲染
+      - id: creative/motion
+        name: 动效设计
+        keywords:
+          - 动效
+          - 动画
+          - After Effects
+          - motion graphics
+          - 特效
+      - id: creative/design
+        name: 设计
+        keywords:
+          - UI设计
+          - UX
+          - 平面设计
+          - Figma
+          - 视觉设计
+      - id: creative/video
+        name: 视频制作
+        keywords:
+          - 视频剪辑
+          - Premiere
+          - DaVinci
+          - 调色
+          - 视频制作
+      - id: creative/audio
+        name: 音频制作
+        keywords:
+          - 音乐制作
+          - 混音
+          - 录音
+          - 播客
+          - 音效
+
+  - id: productivity
+    name: 效率
+    tags:
+      - id: productivity/pkm
+        name: 个人知识管理
+        keywords:
+          - 笔记
+          - Obsidian
+          - Notion
+          - 知识管理
+          - 第二大脑
+          - PKM
+      - id: productivity/workflow
+        name: 工作流
+        keywords:
+          - 自动化
+          - 效率工具
+          - workflow
+          - 快捷指令
+          - n8n
+          - Zapier
+      - id: productivity/learning
+        name: 学习方法
         keywords:
           - 学习
-          - 考试
+          - 学习方法
+          - 读书
           - 课程
-          - 教程
-          - 知识
-          - 技能
-      - id: entertainment
-        name: 娱乐
+          - 技能提升
+
+  - id: life
+    name: 生活
+    tags:
+      - id: life/travel
+        name: 旅行
         keywords:
-          - 游戏
-          - 电影
-          - 音乐
-          - 动漫
-          - 综艺
-          - 明星
-      - id: health
+          - 旅行
+          - 旅游
+          - 攻略
+          - 出行
+          - 目的地
+      - id: life/health
         name: 健康
         keywords:
           - 健身
           - 运动
-          - 医疗
-          - 养生
-          - 心理
-          - 减肥
+          - 饮食
+          - 睡眠
+          - 心理健康
+      - id: life/hobby
+        name: 爱好
+        keywords:
+          - 爱好
+          - 兴趣
+          - 收藏
+          - 手工
+          - 摄影
+      - id: life/finance
+        name: 理财
+        keywords:
+          - 理财
+          - 投资
+          - 储蓄
+          - 消费
+          - 财务规划
 
-  - id: content_type
+  - id: type
     name: 内容类型
     tags:
-      - id: tutorial
+      - id: type/tutorial
         name: 教程
         keywords:
           - 教程
@@ -71,15 +285,8 @@ categories:
           - 指南
           - 攻略
           - 步骤
-      - id: review
-        name: 测评
-        keywords:
-          - 测评
-          - 评测
-          - 体验
-          - 开箱
-          - 对比
-      - id: news
+          - how to
+      - id: type/news
         name: 资讯
         keywords:
           - 新闻
@@ -87,32 +294,39 @@ categories:
           - 动态
           - 发布
           - 公告
-      - id: opinion
-        name: 观点
+          - 最新
+      - id: type/review
+        name: 测评
+        keywords:
+          - 测评
+          - 评测
+          - 体验
+          - 开箱
+          - 对比
+          - 横评
+      - id: type/insight
+        name: 洞见
         keywords:
           - 观点
-          - 看法
           - 分析
           - 思考
-          - 评论
-      - id: sharing
-        name: 分享
+          - 见解
+          - 深度
+          - 趋势
+      - id: type/resource
+        name: 资源
         keywords:
-          - 分享
+          - 资源
+          - 工具
           - 推荐
-          - 安利
-          - 种草
-          - 好物
-
-  - id: source
-    name: 来源平台
-    tags:
-      - id: bilibili
-        name: B站
-        keywords: []
-      - id: xiaohongshu
-        name: 小红书
-        keywords: []
-      - id: wechat
-        name: 微信公众号
-        keywords: []
+          - 合集
+          - 清单
+          - 分享
+      - id: type/reference
+        name: 参考
+        keywords:
+          - 文档
+          - 参考
+          - API
+          - 手册
+          - 规范
