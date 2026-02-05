@@ -12,6 +12,7 @@ from obs_agent.tools import (
     ImageAnalyzer,
     ObsidianWriter,
     TagMatcher,
+    extract_and_resolve_url,
 )
 
 router = APIRouter(prefix="/api")
@@ -57,6 +58,9 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
     elif image_data[:4] == b'RIFF' and image_data[8:12] == b'WEBP':
         mime_type = "image/webp"
 
+    # Extract and resolve URL from text (handles short URLs like b23.tv, xhslink.com)
+    resolved_url = await extract_and_resolve_url(request.url) if request.url else ""
+
     # Acquire lock to ensure sequential processing (prevents Git race conditions)
     async with _process_lock:
         try:
@@ -91,7 +95,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                 content=result.content,
                 tags=tags,
                 capture_date=date.today(),
-                url=request.url,
+                url=resolved_url,
             )
             file_path = writer.write_article(article)
 
@@ -111,7 +115,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                     tags=tags,
                     file_path=file_path,
                     git_status=f"Pull: OK | Add: {add_msg}",
-                    url=request.url,
+                    url=resolved_url,
                 )
 
             # Commit
@@ -127,7 +131,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                     tags=tags,
                     file_path=file_path,
                     git_status=f"Pull: OK | Add: OK | Commit: {commit_msg}",
-                    url=request.url,
+                    url=resolved_url,
                 )
 
             # Push (only if there were changes committed)
@@ -145,7 +149,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                         tags=tags,
                         file_path=file_path,
                         git_status=f"Pull: OK | Add: OK | Commit: OK | Push: {push_msg}",
-                        url=request.url,
+                        url=resolved_url,
                     )
                 git_status = f"Pull: OK | Add: OK | Commit: OK | Push: OK"
 
@@ -159,7 +163,7 @@ async def process_screenshot(request: ProcessRequest) -> ProcessResponse:
                 tags=tags,
                 file_path=file_path,
                 git_status=git_status,
-                url=request.url,
+                url=resolved_url,
             )
 
         except HTTPException:
